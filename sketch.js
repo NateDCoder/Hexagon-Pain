@@ -13,8 +13,8 @@ function setup() {
     createCanvas(17.5 * SCALE, 8 * SCALE);
     reefPointsAngles = [0, PI / 3, 2 * PI / 3, PI, 4 * PI / 3, 5 * PI / 3];
 
-    startPoint = createVector(width / 2, height / 2)
-    endPoint = createVector(width / 2, height / 2 - 100)
+    startPoint = createVector(0, 0)
+    endPoint = createVector(0, 0)
 
     controlPoint1 = createVector(0, 0);
     controlPoint2 = createVector(0, 0);
@@ -64,7 +64,6 @@ function draw() {
     }
     let planeLength = Math.min(Math.abs(intersectedPlanes[0] - intersectedPlanes[1]), 6 - Math.abs(intersectedPlanes[0] - intersectedPlanes[1]));
     let L1, L2, L3, t1, t2;
-    console.log(intersectedPlanes)
     switch (planeLength) {
         case 1:
             vertexPoint2 = endPoint.copy();
@@ -88,9 +87,9 @@ function draw() {
             }
             controlPoint2 = createVector(0, 0);
             if (dist(startPoint.x, startPoint.y, vertexPoint1.x, vertexPoint1.y) > dist(startPoint.x, startPoint.y, vertexPoint2.x, vertexPoint2.y)) {
-                let copy = vertexPoint1;
+                let cpy = vertexPoint1;
                 vertexPoint1 = vertexPoint2;
-                vertexPoint2 = copy;
+                vertexPoint2 = cpy;
             } 
             L1 = dist(startPoint.x, startPoint.y, vertexPoint1.x, vertexPoint1.y);
             L2 = dist(vertexPoint1.x, vertexPoint1.y, vertexPoint2.x, vertexPoint2.y);
@@ -114,9 +113,9 @@ function draw() {
             }
             controlPoint2 = createVector(0, 0);
             if (dist(startPoint.x, startPoint.y, vertexPoint1.x, vertexPoint1.y) > dist(startPoint.x, startPoint.y, vertexPoint2.x, vertexPoint2.y)) {
-                let copy = vertexPoint1;
+                let cpy = vertexPoint1;
                 vertexPoint1 = vertexPoint2;
-                vertexPoint2 = copy;
+                vertexPoint2 = cpy;
             } 
             L1 = dist(startPoint.x, startPoint.y, vertexPoint1.x, vertexPoint1.y);
             L2 = dist(vertexPoint1.x, vertexPoint1.y, vertexPoint2.x, vertexPoint2.y);
@@ -129,8 +128,8 @@ function draw() {
             getControlPoints(t1, t2);
             break;
     }
-
 }
+
 function getControlPoints(t1, t2) {
     let t1Minus = (1 - t1);
     let t1MinusSquared = (1 - t1) * (1 - t1)
@@ -180,23 +179,24 @@ function getControlPoints(t1, t2) {
     return { "controlP1": controlP1, "controlP2": controlP2 }
 
 }
+
 function degreesToRadians(degrees) {
     return degrees * (Math.PI / 180);
-};
+}
 
+var newStart = false;
 var changeStart = false;
 var changeEnd = false;
 
 function mousePressed() {
-    if (dist(mouseX, mouseY, startPoint.x, startPoint.y) < 20) {
-        startPoint = createVector(mouseX, mouseY)
-    }
-}
-function mousePressed() {
-    if (dist(mouseX, mouseY, startPoint.x, startPoint.y) < 20) {
+    if (dist(0, 0, startPoint.x, startPoint.y) < 5 && dist(0, 0, endPoint.x, endPoint.y) < 5) {
+        startPoint = createVector(mouseX, mouseY);
+        newStart = true;
+    } else if (dist(mouseX, mouseY, startPoint.x, startPoint.y) < 20) {
+        startPoint = createVector(mouseX, mouseY);
         changeStart = true;
-    }
-    if (dist(mouseX, mouseY, endPoint.x, endPoint.y) < 20) {
+    } else if (dist(mouseX, mouseY, endPoint.x, endPoint.y) < 20) {
+        endPoint = createVector(mouseX, mouseY);
         changeEnd = true;
     }
 }
@@ -205,14 +205,14 @@ function mousePressed() {
 function mouseReleased() {
     changeStart = false;
     changeEnd = false;
+    newStart = false;
 }
 
 // Update the first control point while the user drags the mouse.
 function mouseDragged() {
-    if (changeStart === true) {
+    if (changeStart) {
         startPoint = createVector(mouseX, mouseY);
-    }
-    if (changeEnd === true) {
+    } else if (changeEnd || newStart) {
         endPoint = createVector(mouseX, mouseY);
     }
 }
@@ -245,4 +245,3 @@ function doIntersect(p1, q1, p2, q2) {
 
     return false;  // No intersection
 }
-
