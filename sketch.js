@@ -98,19 +98,22 @@ function draw() {
             t1 = L1 / (L1 + L2 + L3) * 0.86;
             t2 = 1 - L3 / (L1 + L2 + L3)
 
-
+            console.log(t1, t2)
             getControlPoints(t1, t2);
             break;
         case 3:
-            vertexPoint1 = vertexs[intersectedPlanes[0] + 1];
-            vertexPoint2 = vertexs[intersectedPlanes[0] + 2];
-            if (intersectedPlanes[0] == 0 && intersectedPlanes[1] == 4) {
-                vertexPoint1 = vertexs[5];
-                vertexPoint2 = vertexs[0];
-            } else if (intersectedPlanes[0] == 1 && intersectedPlanes[1] == 5) {
-                vertexPoint1 = vertexs[0];
-                vertexPoint2 = vertexs[1];
+            let intersectVertex1 = intersectedPlanes[0] + 1;
+            let intersectVertex2 = intersectedPlanes[0] + 2;
+            if (intersectedPlanes[0] == 1 && intersectedPlanes[1] == 4) {
+                intersectVertex1 = 5;
+                intersectVertex2 = 0;
+                
+            } else if (intersectedPlanes[0] == 2 && intersectedPlanes[1] == 5) {
+                intersectVertex1 = 3;
+                intersectVertex2 = 4;
             }
+            vertexPoint1 = vertexs[intersectVertex1];
+            vertexPoint2 = vertexs[intersectVertex2];
             controlPoint2 = createVector(0, 0);
             if (dist(startPoint.x, startPoint.y, vertexPoint1.x, vertexPoint1.y) > dist(startPoint.x, startPoint.y, vertexPoint2.x, vertexPoint2.y)) {
                 let cpy = vertexPoint1;
